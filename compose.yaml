@@ -1,0 +1,15 @@
+services: 
+  backend: 
+    build: 
+      context: . 
+      dockerfile: Dockerfile 
+    ports: 
+      - "3000:3000" 
+  keydb:
+      ports:
+          - 6379:6379
+      volumes:
+          - ./keydb/:/data
+      container_name: keydb
+      image: eqalpha/keydb
+      command: keydb-server /etc/keydb/keydb.conf --protected-mode no --appendonly yes
