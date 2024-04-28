@@ -1,10 +1,10 @@
 services: 
-  backend: 
-    build: 
-      context: . 
-      dockerfile: Dockerfile 
-    ports: 
-      - "3000:3000" 
+  # backend: 
+  #   build: 
+  #     context: . 
+  #     dockerfile: Dockerfile 
+  #   ports: 
+  #     - "3000:3000" 
   keydb:
       ports:
           - 6379:6379
