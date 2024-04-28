@@ -16,13 +16,29 @@ var client = redis.NewClient(&redis.Options{
 
 var ctx = context.Background()
 
+func Register(user User) {
+    err := client.HSet(ctx, user.Username, "username", user.Username, "password", user.Password).Err();
+    Error(err, fmt.Sprintf("Registering user %s failed", user.Username))
+}
+
+func Remove(user User) {
+    err := client.HDel(ctx, user.Username).Err();
+    Error(err, fmt.Sprintf("Removing user %s failed", user.Username))
+}
+
 func Set(key Key) {
-    err := client.Set(ctx, key.Name, key.Key, 0).Err()
+    err := client.HSet(ctx, key.Username, key.Name, key.Key).Err();
     Error(err, fmt.Sprintf("Setting key %s failed", key.Name))
 }
 
 func Get(key Key) Key {
-    val, err := client.Get(ctx, key.Name).Result()
+    val, err := client.HMGet(ctx, key.Username, key.Name).Result();
     Error(err, fmt.Sprintf("Getting key %s failed", key.Name))
-    return Key{Name: key.Name, Key: val}
+    return Key{Username: key.Username, Name: key.Name, Key: val[0].(string)}
 }
+
+func Delete(key Key){
+    err := client.HDel(ctx, key.Username, key.Name).Err();
+    Error(err, fmt.Sprintf("Deleting key %s failed", key.Name))
+}
+
